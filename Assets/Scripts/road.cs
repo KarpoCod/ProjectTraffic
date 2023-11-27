@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class road : MonoBehaviour
 {
-    public int ID;
+    /*public int ID;
     public int lenght = 1;
     public int wide = 1;
     public light Output;
@@ -38,6 +38,6 @@ public class road : MonoBehaviour
             else if (i != 0) Road_Matrix[i] = Road_Matrix[i - 1]; else Road_Matrix[i] = inputs;
         }
         for (int x = 0; x < outputs.Count(i => i.Equals(1)); x++) Output.Add_car(DirectionId);
-        UnityEngine.Debug.Log("с дороги " + ID + " на направление " + DirectionId + " ушло едеиниц " + outputs.Count(i => i.Equals(1)));
-    }
+        UnityEngine.Debug.Log("с дороги " + ID + " на направление " + DirectionId + " ушло единиц " + outputs.Count(i => i.Equals(1)));
+    }*/
 }

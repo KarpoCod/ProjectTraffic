@@ -13,10 +13,10 @@ public class UpdateManager : MonoBehaviour
     {
         if(timer < 0)
         {
-            foreach (road line in roads)
+            /*foreach (road line in roads)
             {
                 line.Manager_Update();
-            }
+            }*/
             foreach (light blinker in lights)
             {
                 blinker.Manager_Update();
