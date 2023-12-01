@@ -11,7 +11,6 @@ public class light : MonoBehaviour
     public int ID;
     public int Max_Delay;
     public direction[] InputLines = new direction[1];
-    public direction[] OutputLines = new direction[1];
     public bool Is_Active = true;
     private int past_time = 0;
     private Dictionary<int, int> delays = new Dictionary<int, int>();
@@ -21,7 +20,7 @@ public class light : MonoBehaviour
         int numOfCars = Cars.Count(i => i.Equals(1));
         if (Is_Active)
         {
-            if (InputLines.Length - 1 <= directionID)
+            if (InputLines.Length - 1 >= directionID)
             {
                 if (InputLines[directionID].wide >= numOfCars) {
                     InputLines[directionID].car_queue += numOfCars;
@@ -29,7 +28,7 @@ public class light : MonoBehaviour
                 }
                 else UnityEngine.Debug.LogError(("ввода под таким номером {0} не может принять такое кол-во единиц {1}!", directionID, numOfCars));
             }
-            else UnityEngine.Debug.LogError("ввода под таким номером не существует!" + directionID.ToString());
+            else UnityEngine.Debug.LogError("ввода под таким номером не существует!" + directionID.ToString() + ID.ToString());
         }
         else UnityEngine.Debug.LogWarning("данный светофор не работает");
     }
@@ -48,6 +47,7 @@ public class light : MonoBehaviour
             {
                 Direct.Uptd();
                 priorities[Direct.ID] = Mathf.CeilToInt(Direct.car_queue / Direct.wide) + Mathf.FloorToInt(Direct.wait >> 2);
+                Direct.Is_Open = false;
             }
             for (int i = 0; i < priorities.Length; i++) delays[i] = priorities[i];
             if (past_time == 0)
@@ -56,6 +56,7 @@ public class light : MonoBehaviour
 
                 int index = dict.Keys.ToArray()[0];
                 past_time = priorities[index];
+                InputLines[index].Is_Open = true;
                 UnityEngine.Debug.Log(past_time + " " + index + " " + ID);
             }
             else past_time--;
@@ -64,6 +65,7 @@ public class light : MonoBehaviour
         {
             foreach (direction Direct in InputLines)
             {
+                Direct.car_queue = 0;
                 Direct.Spawner();
             }
         }

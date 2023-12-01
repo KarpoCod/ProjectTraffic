@@ -9,10 +9,10 @@ public class UpdateManager : MonoBehaviour
     public float t = 1;
     float timer = 0;
 
-    void Update()
+    public void But_Update()
     {
-        if(timer < 0)
-        {
+        //if(timer < 0)
+        //{
             /*foreach (road line in roads)
             {
                 line.Manager_Update();
@@ -21,8 +21,8 @@ public class UpdateManager : MonoBehaviour
             {
                 blinker.Manager_Update();
             }
-            timer = t;
-        }
-        else timer -= Time.deltaTime;
+            //timer = t;
+        //}
+        //else timer -= Time.deltaTime;
     }
 }
