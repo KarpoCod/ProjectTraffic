@@ -157,8 +157,9 @@ MonoBehaviour:
   ID: 2
   Max_Delay: 30
   InputLines:
-  - ID: 0
-    wide: 1
+  - sp_rate: 1
+    ID: 0
+    wide: 2
     car_queue: 0
     Is_Open: 0
     Outs:
@@ -583,8 +584,9 @@ MonoBehaviour:
   ID: 0
   Max_Delay: 30
   InputLines:
-  - ID: 0
-    wide: 1
+  - sp_rate: 1
+    ID: 0
+    wide: 10
     car_queue: 0
     Is_Open: 0
     Outs:
@@ -803,7 +805,8 @@ MonoBehaviour:
   ID: 1
   Max_Delay: 30
   InputLines:
-  - ID: 0
+  - sp_rate: 1
+    ID: 0
     wide: 1
     car_queue: 0
     Is_Open: 0
@@ -1263,8 +1266,9 @@ MonoBehaviour:
   ID: 3
   Max_Delay: 30
   InputLines:
-  - ID: 0
-    wide: 1
+  - sp_rate: 0.3
+    ID: 0
+    wide: 10
     car_queue: 0
     Is_Open: 1
     Outs:
@@ -1273,7 +1277,8 @@ MonoBehaviour:
     - light: {fileID: 105360213}
       ID_of_inp: 0
     wait: 0
-  - ID: 1
+  - sp_rate: 0.3
+    ID: 1
     wide: 1
     car_queue: 0
     Is_Open: 0
@@ -1283,8 +1288,9 @@ MonoBehaviour:
     - light: {fileID: 105360213}
       ID_of_inp: 0
     wait: 0
-  - ID: 2
-    wide: 1
+  - sp_rate: 0.3
+    ID: 2
+    wide: 2
     car_queue: 0
     Is_Open: 0
     Outs:
