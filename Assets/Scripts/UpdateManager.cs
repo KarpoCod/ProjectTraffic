@@ -9,10 +9,12 @@ public class UpdateManager : MonoBehaviour
     public float t = 1;
     float timer = 0;
     public bool work = false;
+    public bool pause = false;
+    public GameObject pause_but;
 
     void Update()
     {
-        if (work)
+        if (work && !pause)
         {
             if (timer < 0)
             {
@@ -31,6 +33,11 @@ public class UpdateManager : MonoBehaviour
     }
     public void set_work(bool w)
     {
-        work = w;
+        work = !w;
+        pause_but.SetActive(!w);
+    }
+    public void set_pause(bool w)
+    {
+        pause = w;
     }
 }
