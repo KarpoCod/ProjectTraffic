@@ -8,21 +8,29 @@ public class UpdateManager : MonoBehaviour
     public road[] roads;
     public float t = 1;
     float timer = 0;
+    public bool work = false;
 
     void Update()
     {
-        if(timer < 0)
+        if (work)
         {
-            /*foreach (road line in roads)
+            if (timer < 0)
             {
-                line.Manager_Update();
-            }*/
-            foreach (light blinker in lights)
-            {
-                blinker.Manager_Update();
+                /*foreach (road line in roads)
+                {
+                    line.Manager_Update();
+                }*/
+                foreach (light blinker in lights)
+                {
+                    blinker.Manager_Update();
+                }
+                timer = t;
             }
-            timer = t;
+            else timer -= Time.deltaTime;
         }
-        else timer -= Time.deltaTime;
+    }
+    public void set_work(bool w)
+    {
+        work = w;
     }
 }

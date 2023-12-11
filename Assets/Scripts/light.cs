@@ -61,10 +61,9 @@ public class light : MonoBehaviour//основной класс светофора
             if (past_time == 0)//обновление времени работы каналов и включение следующего
             {
                 var dict = delays.OrderBy(x => x.Value).ToDictionary<KeyValuePair<int, int>, int, int>(pair => pair.Key, pair => pair.Value);
-                string ou = "list ";
+                //string ou = "list ";
                 //foreach (int i in dict.Values.ToArray()) ou += i.ToString() + " "; //вывод текущей очереди включения (дебаг)
-
-                UnityEngine.Debug.Log(ou);
+                //UnityEngine.Debug.Log(ou);
 
                 int[] keys = dict.Keys.ToArray();
 
@@ -101,6 +100,13 @@ public class direction//класс отдельного ВХОДА светофора
     {
         public light light;
         public int ID_of_inp;
+        public bool pos = true;
+        public OutLine(light l, int ID)
+        {
+            pos = true;
+            light = l;
+            ID_of_inp = ID;
+        }
     }
     public OutLine[] Outs;
     public int wait = 0;
@@ -117,14 +123,17 @@ public class direction//класс отдельного ВХОДА светофора
         int OnOutput = 0;
         if (Is_Open)
         {
-            OutLine[] Pos_Outs = Outs;
+            OutLine[] Pos_Outs = new OutLine[Outs.Length];
+            for(int i = 0; i < Outs.Length; i++) Pos_Outs[i] = new OutLine(Outs[i].light, Outs[i].ID_of_inp);
+            //Pos_Outs = Outs;
+
             wait = 0;
             if (car_queue - wide <= 0) { OnOutput = car_queue; car_queue = 0; }
             else { OnOutput = wide; car_queue -= wide; }
-            while (OnOutput > 0 && Pos_Outs.Count(i => i.Equals(null)) < Pos_Outs.Length)
+            while (OnOutput > 0 && Pos_Outs.Count(i => i.pos.Equals(false)) < Pos_Outs.Length)
             {
                 int rID = UnityEngine.Random.Range(0, Pos_Outs.Length);
-                while (Pos_Outs == null) 
+                while (Pos_Outs[rID].pos == false) 
                 { 
                     if (rID < Pos_Outs.Length - 1) rID++;
                     else rID = 0;
@@ -133,7 +142,7 @@ public class direction//класс отдельного ВХОДА светофора
                 int rNum = UnityEngine.Random.Range(1, Pos_Outs[rID].light.InputLines[Pos_Outs[rID].ID_of_inp].wide);
                 for (int x = 0; x < rNum; x++) cars[x] = 1;
                 int m = Pos_Outs[rID].light.Add_car(Pos_Outs[rID].ID_of_inp, cars);
-                if (m == 0) Pos_Outs[rID] = null;
+                if (m == 0) Pos_Outs[rID].pos = false;
                 OnOutput -= m;
             }
             car_queue += OnOutput;
