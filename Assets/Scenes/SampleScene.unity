@@ -1098,6 +1098,8 @@ MonoBehaviour:
   roads: []
   t: 0.5
   work: 0
+  pause: 0
+  pause_but: {fileID: 0}
 --- !u!1 &1300512902
 GameObject:
   m_ObjectHideFlags: 0

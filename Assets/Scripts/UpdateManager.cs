@@ -5,12 +5,13 @@ using UnityEngine;
 public class UpdateManager : MonoBehaviour
 {
     public light[] lights;
-    public road[] roads;
+    //public road[] roads;
     public float t = 1;
     float timer = 0;
     public bool work = false;
     public bool pause = false;
     public GameObject pause_but;
+    public GameObject[] edit_tools;
 
     void Update()
     {
@@ -35,6 +36,7 @@ public class UpdateManager : MonoBehaviour
     {
         work = !w;
         pause_but.SetActive(!w);
+        foreach(GameObject go in edit_tools) go.SetActive(w);
     }
     public void set_pause(bool w)
     {
