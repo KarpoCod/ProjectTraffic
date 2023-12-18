@@ -1,23 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UpdateManager : MonoBehaviour
 {
-    public light light_pref;
-    public light[] lights;
+    public lighter light_pref;
+    public lighter[] lights;
     //public road[] roads;
     public float t = 1;
     float timer = 0;
     public bool work = false;
     public bool pause = false;
     public GameObject pause_but;
+    public Toggle sp;
     public GameObject[] edit_tools;
     public Camera Cam;
 
     void Update()
     {
-        if (!work && Input.GetMouseButtonDown(0))
+        if (!work && Input.GetMouseButtonDown(1))
         {
             Clicked();
         }
@@ -29,7 +31,7 @@ public class UpdateManager : MonoBehaviour
                 {
                     line.Manager_Update();
                 }*/
-                foreach (light blinker in lights)
+                foreach (lighter blinker in lights)
                 {
                     blinker.Manager_Update();
                 }
@@ -51,26 +53,34 @@ public class UpdateManager : MonoBehaviour
 
     private void Clicked()
     {
-        light[] li = new light[lights.Length + 1];
-        Debug.Log(Input.mousePosition);
+        lighter[] li = new lighter[lights.Length + 1];
+        
         Vector3 light_pos = new Vector3();
-        Vector3 mPos = Input.mousePosition; 
-        Debug.Log(Cam.ScreenToWorldPoint(mPos));
-        Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            light_pos = hit.point;
+        Vector3 mPos = Input.mousePosition;
+        mPos.z = Cam.nearClipPlane;
+        light_pos = Cam.ScreenToWorldPoint(mPos);
+        if (lights.Length == 0) 
+        { 
+            lights = new lighter[1];
+            lighter LightObj = Instantiate(light_pref, light_pos, Quaternion.identity);
+            LightObj.gameObject.name = "Traffic light " + 0;
+            lights[0] = LightObj;
+            lights[0].ID = lights.Length;
+            lights[0].Is_Spawner = sp.isOn;
         }
-        if (lights.Length == 0) { lights = new light[1]; lights[0] = Instantiate(light_pref, light_pos, Quaternion.identity); }
         else
         {
             for (int i = 0; i < lights.Length; i++)
             {
                 li[i] = lights[i];
             }
-            lights[lights.Length - 1] = Instantiate(light_pref, light_pos, Quaternion.identity);
+            lighter LightObj = Instantiate(light_pref, light_pos, Quaternion.identity);
+            LightObj.gameObject.name = "Traffic light " + (lights.Length);
+            li[lights.Length] = LightObj;
+            li[lights.Length].ID = lights.Length;
+            li[lights.Length].Is_Spawner = sp.isOn;
+            lights = li;
+           
         }
     }
 }

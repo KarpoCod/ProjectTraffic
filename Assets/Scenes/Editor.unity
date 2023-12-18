@@ -467,6 +467,7 @@ MonoBehaviour:
   work: 0
   pause: 0
   pause_but: {fileID: 951480886}
+  sp: {fileID: 914249245}
   edit_tools: []
   Cam: {fileID: 1870491544}
 --- !u!4 &655164180
@@ -1183,7 +1184,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &1342940552
 RectTransform:
@@ -1513,6 +1514,7 @@ GameObject:
   - component: {fileID: 1870491546}
   - component: {fileID: 1870491544}
   - component: {fileID: 1870491545}
+  - component: {fileID: 1870491547}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -1543,7 +1545,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 100
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -1579,13 +1581,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870491543}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 150}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1870491547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870491543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56666c5a40171f54783dd416a44f42bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1 &1942984475
 GameObject:
   m_ObjectHideFlags: 0

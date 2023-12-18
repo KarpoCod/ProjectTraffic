@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 
-public class light : MonoBehaviour//основной класс светофора
+public class lighter : MonoBehaviour//основной класс светофора
 {
     public bool Is_Spawner = false;
     public int ID;
@@ -98,10 +98,10 @@ public class direction//класс отдельного ВХОДА светофора
     [Serializable]
     public class OutLine //доступные направления на выход с узла от этого ВХОДА
     {
-        public light light;
+        public lighter light;
         public int ID_of_inp;
         public bool pos = true;
-        public OutLine(light l, int ID)
+        public OutLine(lighter l, int ID)
         {
             pos = true;
             light = l;
