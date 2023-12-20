@@ -16,12 +16,21 @@ public class UpdateManager : MonoBehaviour
     public Toggle sp;
     public GameObject[] edit_tools;
     public Camera Cam;
+    public int cur_st;
+    private bool road_ed = false;
 
     void Update()
     {
-        if (!work && Input.GetMouseButtonDown(1))
+        if (!work)
         {
-            Clicked();
+            if (Input.GetMouseButtonDown(1))
+            {
+                Light_Inst();
+            }
+            else if (Input.GetMouseButtonDown(2)) 
+            { 
+                Road_Inst(); 
+            }
         }
         if (work && !pause)
         {
@@ -51,14 +60,41 @@ public class UpdateManager : MonoBehaviour
         pause = w;
     }
 
-    private void Clicked()
+    public void Change_editor_state(int state)
+    {
+        switch (state)
+        {
+            case 0:
+                cur_st = 0;
+                break;
+        }
+    }
+
+    private void Road_Inst()
+    {
+        Vector3 mouse = MouseCords();
+        float minDist = 1000f;
+        int minI = 0;
+        for(int i = 0; i < lights.Length; i++)
+        {
+            lighter nLight = lights[i];
+            float curDist = Vector3.Distance(nLight.gameObject.GetComponent<Transform>().position, mouse);
+            if (curDist < minDist)
+            {
+                minI = i;
+                minDist = curDist;
+            }               
+        }
+        Debug.Log(minDist);
+        if (minDist < 9f) lights[minI].gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
+    }
+
+    private void Light_Inst()
     {
         lighter[] li = new lighter[lights.Length + 1];
         
-        Vector3 light_pos = new Vector3();
-        Vector3 mPos = Input.mousePosition;
-        mPos.z = Cam.nearClipPlane;
-        light_pos = Cam.ScreenToWorldPoint(mPos);
+        
+        Vector3 light_pos = MouseCords();
         if (lights.Length == 0) 
         { 
             lights = new lighter[1];
@@ -82,5 +118,16 @@ public class UpdateManager : MonoBehaviour
             lights = li;
            
         }
+        lights[lights.Length-1].Is_Spawner = sp.isOn;
+        lights[lights.Length - 1].gameObject.GetComponent<SpriteRenderer>().color = sp.isOn ? Color.black : Color.green;
+    }
+
+    private Vector3 MouseCords()
+    {
+        Vector3 light_pos = new Vector3();
+        Vector3 mPos = Input.mousePosition;
+        mPos.z = Cam.nearClipPlane;
+        light_pos = Cam.ScreenToWorldPoint(mPos);
+        return light_pos;
     }
 }
