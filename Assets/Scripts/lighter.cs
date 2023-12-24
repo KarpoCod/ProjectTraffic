@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class lighter : MonoBehaviour//основной класс светофора
 {
+    public float sp_rate = 0.7f;
     public bool Is_Spawner = false;
     public int ID;
     public int Max_Delay;
@@ -79,7 +80,7 @@ public class lighter : MonoBehaviour//основной класс светофора
             foreach (direction Direct in InputLines)// случайный спавн машин на каждом направлении
             {
                 Direct.car_queue = 0;
-                Direct.Spawner();
+                Direct.Spawner(sp_rate);
             }
         }
     }
@@ -88,7 +89,6 @@ public class lighter : MonoBehaviour//основной класс светофора
 [Serializable]
 public class direction//класс отдельного ВХОДА светофора
 {
-    public float sp_rate = 0.7f;
     public int ID = 0;
     public int wide = 1;
     public int len = 1;
@@ -148,7 +148,7 @@ public class direction//класс отдельного ВХОДА светофора
             car_queue += OnOutput;
         }
     }
-    public void Spawner()
+    public void Spawner(float sp_rate)
     {
         for (int rID = 0; rID < Outs.Length; rID++)
         {
