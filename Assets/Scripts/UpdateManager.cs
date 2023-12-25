@@ -16,6 +16,9 @@ public class UpdateManager : MonoBehaviour
     public GameObject pause_but;
     public Slider sp_rate_sl;
     public TMP_Dropdown State_dd;
+    public TMP_InputField Len;
+    public TMP_InputField Lines;
+    public Toggle Direct;
     public GameObject edit_panel;
     public Camera Cam;
     public int cur_st;
@@ -76,6 +79,7 @@ public class UpdateManager : MonoBehaviour
         pause_but.GetComponent<Toggle>().isOn = false;
         pause = false;
         edit_panel.SetActive(w);
+        if (!w) foreach (lighter l in lights) l.INIT();
     }
 
     public void set_pause(bool w)
@@ -110,7 +114,9 @@ public class UpdateManager : MonoBehaviour
 
     private void Road_Inst()
     {  
+        int len = int.TryParse(Len.text, out len) ? len : 1;
         int minI = find_nearest();
+        int wide = int.TryParse(Lines.text, out wide) ? wide : 1;
         if (minI > -1 && !road_ed)
         {
             Line = Instantiate(LinePref);
@@ -124,8 +130,16 @@ public class UpdateManager : MonoBehaviour
             road_ed = false;
             positions[1] = lights[minI].gameObject.transform.position;
             Line.SetPosition(1, positions[1]);
+            Add_Transition(lights[LastI], lights[minI], len, wide);
+            if (Direct.isOn) { Add_Transition(lights[minI], lights[LastI], len, wide); }
         }
         LastI = minI;
+    }
+
+    public void Add_Transition(lighter from, lighter to, int wide, int length)
+    {
+        int id = to.Add_Direct(wide, length);
+        from.Add_Out(to, id);
     }
 
     private void Light_Inst()

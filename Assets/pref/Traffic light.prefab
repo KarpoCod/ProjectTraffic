@@ -108,3 +108,4 @@ MonoBehaviour:
   Max_Delay: 30
   InputLines: []
   Is_Active: 1
+  LightOuts: []

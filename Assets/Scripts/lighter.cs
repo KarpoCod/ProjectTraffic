@@ -16,6 +16,33 @@ public class lighter : MonoBehaviour//основной класс светофора
     public bool Is_Active = true;
     private int past_time = 0;
     private Dictionary<int, int> delays = new Dictionary<int, int>();
+    public OutLine[] LightOuts;
+
+    public void Add_Out(lighter light, int IdOfInput)
+    {
+        UnityEngine.Debug.Log(("new out on {0} on inp {1} of {2}", ID, IdOfInput, light.ID));
+        OutLine[] Lines = new OutLine[LightOuts.Length + 1];
+        if (LightOuts.Length == 0) { LightOuts = new OutLine[] { new OutLine(light, IdOfInput) }; return; }
+        for (int i = 0; i < LightOuts.Length; i++)
+        {
+            Lines[i] = LightOuts[i];
+        }
+        Lines[LightOuts.Length] = new OutLine(light, IdOfInput);
+        LightOuts = Lines;
+    }
+
+    public int Add_Direct(int Wide, int Len)
+    {
+        direction[] Lines = new direction[InputLines.Length + 1];
+        if (InputLines.Length == 0) { InputLines = new direction[] { new direction(0, Wide, Len)}; return 0; }
+        for (int i = 0; i < InputLines.Length; i++)
+        {
+            Lines[i] = InputLines[i];
+        }
+        Lines[InputLines.Length] = new direction(InputLines.Length, Wide, Len);
+        InputLines = Lines;
+        return InputLines.Length - 1;
+    }
 
     public int Add_car(int directionID, int[] Cars)//добавление N машин на одно из направлений светофора
     {
@@ -40,9 +67,13 @@ public class lighter : MonoBehaviour//основной класс светофора
         return Outs;
     }
 
-    void Start()
+    public void INIT()
     {
-        foreach (direction Direct in InputLines) delays.Add(Direct.ID, Mathf.CeilToInt(Direct.car_queue / Direct.wide) + Mathf.FloorToInt(Direct.wait >> 1));//создание словаря с временем ожидания на каждом светофоре
+        foreach (direction Direct in InputLines)
+        { 
+            delays.Add(Direct.ID, Mathf.CeilToInt(Direct.car_queue / Direct.wide) + Mathf.FloorToInt(Direct.wait >> 1));//создание словаря с временем ожидания на каждом светофоре
+            Direct.INIT(LightOuts);
+        }
     }
 
     int index = 0;
@@ -87,6 +118,20 @@ public class lighter : MonoBehaviour//основной класс светофора
 }
 
 [Serializable]
+public class OutLine //доступные направления на выход с узла от этого ВХОДА
+{
+    public lighter light;
+    public int ID_of_inp;
+    public bool pos = true;
+    public OutLine(lighter l, int ID)
+    {
+        pos = true;
+        light = l;
+        ID_of_inp = ID;
+    }
+}
+
+[Serializable]
 public class direction//класс отдельного ВХОДА светофора
 {
     public int ID = 0;
@@ -95,21 +140,15 @@ public class direction//класс отдельного ВХОДА светофора
     public int car_queue;
     public bool Is_Open = false;
 
-    [Serializable]
-    public class OutLine //доступные направления на выход с узла от этого ВХОДА
+    public direction(int id, int wi, int l)
     {
-        public lighter light;
-        public int ID_of_inp;
-        public bool pos = true;
-        public OutLine(lighter l, int ID)
-        {
-            pos = true;
-            light = l;
-            ID_of_inp = ID;
-        }
+        ID = id;
+        wide = wi;
+        len = l;
     }
+
     public OutLine[] Outs;
-    public int wait = 0;
+    public int wait;
     //public int[] delays; 
     /*void Start() 
     { 
@@ -117,6 +156,17 @@ public class direction//класс отдельного ВХОДА светофора
         Outs = new int[wide]; 
         delays = new int[wide]; 
     }*/
+
+    
+
+    public void INIT(OutLine[] LightOuts)
+    {
+        Outs = LightOuts;
+        car_queue = 0;
+        wait = 0;
+    }
+
+    
     public void Uptd()//обновление 
     {
         wait++;
