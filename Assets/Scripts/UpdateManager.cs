@@ -8,7 +8,6 @@ public class UpdateManager : MonoBehaviour
 {
     public lighter light_pref;
     public lighter[] lights;
-    //public road[] roads;
     public float t = 1;
     float timer = 0;
     public bool work = false;
@@ -32,13 +31,13 @@ public class UpdateManager : MonoBehaviour
     void Update()
     {
         cur_st = State_dd.value;
-        
+
         if (road_ed)
         {
             Line.SetPosition(1, MouseCords());
         }
 
-        if (!work &&  Input.GetMouseButtonDown(1))
+        if (!work && Input.GetMouseButtonDown(1))
         {
             switch (cur_st)
             {
@@ -52,16 +51,12 @@ public class UpdateManager : MonoBehaviour
                     Road_Inst();
                     break;
             }
-            
+
         }
         if (work && !pause)
         {
             if (timer < 0)
             {
-                /*foreach (road line in roads)
-                {
-                    line.Manager_Update();
-                }*/
                 foreach (lighter blinker in lights)
                 {
                     blinker.Manager_Update();
@@ -113,7 +108,7 @@ public class UpdateManager : MonoBehaviour
     }
 
     private void Road_Inst()
-    {  
+    {
         int len = int.TryParse(Len.text, out len) ? len : 1;
         int minI = find_nearest();
         int wide = int.TryParse(Lines.text, out wide) ? wide : 1;
@@ -145,11 +140,11 @@ public class UpdateManager : MonoBehaviour
     private void Light_Inst()
     {
         lighter[] li = new lighter[lights.Length + 1];
-        
-        
+
+
         Vector3 light_pos = MouseCords();
-        if (lights.Length == 0) 
-        { 
+        if (lights.Length == 0)
+        {
             lights = new lighter[1];
             lighter LightObj = Instantiate(light_pref, light_pos, Quaternion.identity);
             LightObj.gameObject.name = "Traffic light " + 0;
@@ -167,10 +162,10 @@ public class UpdateManager : MonoBehaviour
             li[lights.Length] = LightObj;
             li[lights.Length].ID = lights.Length;
             lights = li;
-           
+
         }
-        lights[lights.Length-1].sp_rate = sp_rate_sl.value;
-        lights[lights.Length-1].Is_Spawner = cur_st == 1;
+        lights[lights.Length - 1].sp_rate = sp_rate_sl.value;
+        lights[lights.Length - 1].Is_Spawner = cur_st == 1;
         lights[lights.Length - 1].gameObject.GetComponent<SpriteRenderer>().color = cur_st == 1 ? Color.black : Color.green;
     }
 
