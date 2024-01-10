@@ -176,10 +176,10 @@ public class UpdateManager : MonoBehaviour
 
     private Vector3 MouseCords()
     {
-        Vector3 light_pos = new Vector3();
+        Vector3 world_pos = new Vector3();
         Vector3 mPos = Input.mousePosition;
         mPos.z = Cam.nearClipPlane;
-        light_pos = Cam.ScreenToWorldPoint(mPos);
-        return light_pos;
+        world_pos = Cam.ScreenToWorldPoint(mPos);
+        return world_pos;
     }
 }
