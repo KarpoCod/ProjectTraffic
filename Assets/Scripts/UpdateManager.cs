@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Specialized;
 
 public class UpdateManager : MonoBehaviour
 {
+    public float globOffset = 0.5f;
+    public GameObject indic;
     public lighter light_pref;
     public lighter[] lights;
     public float t = 1;
@@ -55,7 +58,7 @@ public class UpdateManager : MonoBehaviour
         }
         if (work && !pause)
         {
-            if (timer < 0)
+            if (timer < 0)//обновление всех светофоров раз в такт
             {
                 foreach (lighter blinker in lights)
                 {
@@ -67,6 +70,7 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
+    //работа с меню
     public void set_work(bool w)
     {
         work = !w;
@@ -89,24 +93,7 @@ public class UpdateManager : MonoBehaviour
         Road_Panel.SetActive(state == 2);
     }
 
-    private int find_nearest()
-    {
-        Vector3 mouse = MouseCords();
-        float minDist = 1000f;
-        int minI = 0;
-        for (int i = 0; i < lights.Length; i++)
-        {
-            lighter nLight = lights[i];
-            float curDist = Vector3.Distance(nLight.gameObject.GetComponent<Transform>().position, mouse);
-            if (curDist < minDist)
-            {
-                minI = i;
-                minDist = curDist;
-            }
-        }
-        return minDist < 9f ? minI : -1;
-    }
-
+    //работа с редактированием
     private void Road_Inst()
     {
         int len = int.TryParse(Len.text, out len) ? len : 1;
@@ -126,15 +113,10 @@ public class UpdateManager : MonoBehaviour
             positions[1] = lights[minI].gameObject.transform.position;
             Line.SetPosition(1, positions[1]);
             Add_Transition(lights[LastI], lights[minI], len, wide);
+
             if (Direct.isOn) { Add_Transition(lights[minI], lights[LastI], len, wide); }
         }
         LastI = minI;
-    }
-
-    public void Add_Transition(lighter from, lighter to, int wide, int length)
-    {
-        int id = to.Add_Direct(wide, length);
-        from.Add_Out(to, id);
     }
 
     private void Light_Inst()
@@ -169,6 +151,7 @@ public class UpdateManager : MonoBehaviour
         lights[lights.Length - 1].gameObject.GetComponent<SpriteRenderer>().color = cur_st == 1 ? Color.black : Color.green;
     }
 
+    //вспомогательный модуль
     private Vector3 MouseCords()
     {
         Vector3 world_pos = new Vector3();
@@ -176,5 +159,41 @@ public class UpdateManager : MonoBehaviour
         mPos.z = Cam.nearClipPlane;
         world_pos = Cam.ScreenToWorldPoint(mPos);
         return world_pos;
+    }
+
+    private int find_nearest()
+    {
+        Vector3 mouse = MouseCords();
+        float minDist = 1000f;
+        int minI = 0;
+        for (int i = 0; i < lights.Length; i++)
+        {
+            lighter nLight = lights[i];
+            float curDist = Vector3.Distance(nLight.gameObject.GetComponent<Transform>().position, mouse);
+            if (curDist < minDist)
+            {
+                minI = i;
+                minDist = curDist;
+            }
+        }
+        return minDist < 9f ? minI : -1;
+    }
+
+    public void Add_Transition(lighter from, lighter to, int wide, int length)
+    {
+        int id = to.Add_Direct(wide, length);
+        from.Add_Out(to, id);
+        GameObject indicator_text_obj = Instantiate(indic);
+        float midX = (from.gameObject.transform.position.x + to.gameObject.transform.position.x) / 2;
+        float midY = (from.gameObject.transform.position.y + to.gameObject.transform.position.y) / 2;
+        float difX = from.gameObject.transform.position.x - to.gameObject.transform.position.x;
+        float difY = from.gameObject.transform.position.y - to.gameObject.transform.position.y;
+        float xOffset = globOffset * Mathf.Abs(difY) / (Mathf.Abs(difY) + Mathf.Abs(difX));
+        float yOffset = globOffset * Mathf.Abs(difX) / (Mathf.Abs(difY) + Mathf.Abs(difX));
+        indicator_text_obj.transform.SetParent(edit_panel.transform.parent); 
+        if (difY > 0) xOffset = -xOffset;
+        if (difX < 0) yOffset = -yOffset;
+        indicator_text_obj.transform.position = new Vector3(midX + xOffset, midY + yOffset, 100);
+        to.InputLines[id].indicator = indicator_text_obj.GetComponent<Text>();
     }
 }
