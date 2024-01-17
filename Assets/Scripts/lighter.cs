@@ -86,7 +86,7 @@ public class lighter : MonoBehaviour//основной класс светофора
         {
             foreach (direction Direct in InputLines)
             {
-                Direct.Uptd();
+                Direct.Uptd(Is_Spawner);
                 delays[Direct.ID] = Mathf.CeilToInt(Direct.car_queue / Direct.wide) + Mathf.FloorToInt(Direct.wait >> 2);
                 Direct.Is_Open = false;
             }//распределение приоритетов включения зелёного света на каждом из направлений на светофоре
@@ -101,6 +101,7 @@ public class lighter : MonoBehaviour//основной класс светофора
                 int[] keys = dict.Keys.ToArray();
 
                 index = keys[keys.Length - 1];
+                if (index > 30) index = 30;
                 past_time = delays[index];
                 InputLines[index].Is_Open = true;
                 UnityEngine.Debug.Log(past_time + " " + index + " " + ID);
@@ -109,11 +110,9 @@ public class lighter : MonoBehaviour//основной класс светофора
         }
         else
         {
-            foreach (direction Direct in InputLines)
-            {
-                Direct.car_queue = 0;
-                Direct.Spawner(sp_rate);
-            }// случайное появление машин на каждом направлении в зависимости от коэффициентов
+                InputLines[0].car_queue = 0;
+                InputLines[0].Spawner(sp_rate);
+            // случайное появление машин на каждом направлении в зависимости от коэффициентов
         }
     }
 }
@@ -163,16 +162,17 @@ public class direction//класс отдельного ВХОДА светофора
 
     public void INIT(OutLine[] LightOuts)
     {
-        indicator.text = "0";
+        indicator.text = "0%";
         Outs = LightOuts;
         car_queue = 0;
         wait = 0;
     }
 
 
-    public void Uptd()//обновление 
+    public void Uptd(bool Is_Spawner)//обновление 
     {
-        indicator.text = (car_queue * 100 / (wide * len)).ToString();
+        if (Is_Spawner) { car_queue = 0; }
+        indicator.text = (car_queue * 100 / (wide * len)).ToString() + "%";
         if(car_queue > 0) wait++;
         int OnOutput = 0;
         if (Is_Open)
@@ -208,7 +208,7 @@ public class direction//класс отдельного ВХОДА светофора
         for (int rID = 0; rID < Outs.Length; rID++)
         {
             int[] cars = new int[Outs[rID].light.InputLines[Outs[rID].ID_of_inp].wide];
-            int rNum = (int)Math.Round(UnityEngine.Random.Range(0, Outs[rID].light.InputLines[Outs[rID].ID_of_inp].wide << 7) * sp_rate)  >> 7;
+            int rNum = (int)Math.Round(UnityEngine.Random.Range(0, Outs[rID].light.InputLines[Outs[rID].ID_of_inp].wide * 100) * sp_rate / 100);
             if (rNum < 0 ) rNum = 0;
             if (rNum != 0) for (int x = 0; x <= rNum - 1; x++) cars[x] = 1;
             Outs[rID].light.Add_car(Outs[rID].ID_of_inp, cars);
