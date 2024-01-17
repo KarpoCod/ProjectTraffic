@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Specialized;
+using UnityEngine.SceneManagement;
 
 public class UpdateManager : MonoBehaviour
 {
@@ -68,6 +69,11 @@ public class UpdateManager : MonoBehaviour
             }
             else timer -= Time.deltaTime;
         }
+    }
+
+    public void reset()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     //работа с меню
